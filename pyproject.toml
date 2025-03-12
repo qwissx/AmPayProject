@@ -1,0 +1,18 @@
+[project]
+name = "AmPayProject"
+version = "0.1.0"
+description = "Project for AmPay intership"
+authors = [
+    {name = "Bogdan Borutenko",email = "bogdanborutenko@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
+python_files = ["test_*.py", "*_test.py"]

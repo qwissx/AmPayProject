@@ -9,6 +9,12 @@ class Settings(BaseSettings):
     db_host: str = Field(..., env="DB_HOST")
     db_pass: str = Field(..., env="DB_PASS")
 
+    redis_host: str = Field(..., env="REDIS_HOST")
+    redis_port: str = Field(..., env="REDIS_PORT")
+
+    secret: str = Field(..., env="SECRET")
+    hash: str = Field(..., env="HASH")
+
     class Config:
         env_file = ".env"
 
