@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ampay.connections import Base
 
 
-class UsersPasswords(Base):
+class Passwords(Base):
     __tablename__ = "passwords"
 
     user_id: Mapped[UUID] = mapped_column(primary_key=True)

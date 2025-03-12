@@ -44,6 +44,10 @@ def check_access_token(payload: dict):
     if not expire or int(expire) < datetime.utcnow().timestamp():
         raise AuthExc.TokenTimeNotValid
 
+    user_id = payload.get("sub")
+    if not user_id:
+        raise AuthExc.TokenIdNotValid
+
     access_key = payload.get("key")
     if not access_key:
         raise AuthExc.TokenKeyNotValid
