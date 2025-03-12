@@ -6,7 +6,7 @@ from ampay.connections import Base
 
 
 class UsersPasswords(Base):
-    __tablename__ = "users_passwords"
+    __tablename__ = "passwords"
 
     user_id: Mapped[UUID] = mapped_column(primary_key=True)
     password: Mapped[str] = mapped_column(nullable=False)

@@ -13,3 +13,4 @@ class AuthExc:
     TokenTimeNotValid = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token time is not valid")
     TokenKeyNotValid = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token access key is not valid")
     TokenRoleNotValid = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token role is not valid")
+    TokenIdNotValid = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token users id is not valid")

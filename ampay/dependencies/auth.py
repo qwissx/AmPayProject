@@ -4,7 +4,6 @@ from uuid import uuid5
 from passlib.context import CryptContext
 from jose import jwt
 
-# from e_commerce.repositories import usersRepository as uR
 from ampay.dependencies import cache
 from ampay import settings as st
 from ampay.exceptions import AuthExc
@@ -21,7 +20,7 @@ def verify_password(plain_pass, hashed_pass) -> bool:
 
 
 async def generate_access_key(user_id: str, role: str):
-    access_key = {"key": uuid5, "role": role}
+    access_key = {"key": uuid5(), "role": role}
 
     await cache.add("AccessKey", user_id, access_key, 1800)
 
@@ -54,7 +53,7 @@ def check_access_token(payload: dict):
         raise AuthExc.TokenRoleNotValid
 
 
-async def authenticate_user(connection, user, password):
+async def authenticate_user(session, user, password):
     if not user:
         raise AuthExc.UserDoesNotExist
 
