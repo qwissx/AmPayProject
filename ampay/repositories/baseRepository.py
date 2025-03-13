@@ -1,5 +1,3 @@
-from uuid import uuid5, UUID
-
 from sqlalchemy import delete, insert, select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,11 +6,9 @@ class BaseRepository:
     model = None
 
     @classmethod
-    async def add(cls, session: AsyncSession, **data) -> UUID:
-        new_id = uuid5()
-        query = insert(cls.model).values(id=new_id, **data)
+    async def add(cls, session: AsyncSession, **data):
+        query = insert(cls.model).values(**data)
         await session.execute(query)
-        return new_id
 
     @classmethod
     async def get(cls, session: AsyncSession, **filter_by):

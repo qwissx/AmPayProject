@@ -12,3 +12,8 @@ class SUserAuth(BaseModel):
     email: EmailStr
     password: str
     role: Role = Role.CLIENT
+
+
+class SUserDisplay(BaseModel):
+    username: str
+    email: EmailStr

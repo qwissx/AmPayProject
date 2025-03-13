@@ -6,8 +6,8 @@ from sqlalchemy import pool
 from alembic import context
 from ampay.connections import Base
 from ampay.settings import settings as st
-from ampay.models.usersModel import Users
-from ampay.models.usersPasswordsModel import UsersPasswords
+from ampay.models.usersModel import Clients
+from ampay.models.passwordsModel import Passwords
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

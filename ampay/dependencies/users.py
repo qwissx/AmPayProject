@@ -5,8 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ampay.exceptions import AuthExc
 from ampay.connections import session_getter
-from ampay.dependencies.auth import check_access_token
-from ampay.repositories.usersRepository import UsersRepository
+from ampay.dependencies.auth import check_access_token, authenticate_user
+from ampay.services.usersService import UsersService
+from ampay.settings import settings as st
 
 
 def get_token(request: Request):
@@ -27,9 +28,11 @@ async def get_current_user(
 
     check_access_token(payload)
 
-    user = UsersRepository.get(session, id=payload.get("sub"))
+    user = await UsersService.find(session, id=payload.get("sub"), role=payload.get("role"))
 
     if not user:
         raise AuthExc.UserDoesNotExist
+
+    await authenticate_user(user.id, payload.get("role"))
 
     return user

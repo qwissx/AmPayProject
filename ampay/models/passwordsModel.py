@@ -8,7 +8,7 @@ from ampay.connections import Base
 class Passwords(Base):
     __tablename__ = "passwords"
 
-    user_id: Mapped[UUID] = mapped_column(primary_key=True)
+    id: Mapped[UUID] = mapped_column(primary_key=True)
     password: Mapped[str] = mapped_column(nullable=False)
 
-    user = relationship("Users", back_populates="password")
+    client_password = relationship("Clients", back_populates="password")

@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
-from uuid import uuid5
+from uuid import uuid4
 
 from passlib.context import CryptContext
 from jose import jwt
 
 from ampay.dependencies import cache
-from ampay import settings as st
+from ampay.settings import settings as st
 from ampay.exceptions import AuthExc
 
 
@@ -20,49 +20,37 @@ def verify_password(plain_pass, hashed_pass) -> bool:
 
 
 async def generate_access_key(user_id: str, role: str):
-    access_key = {"key": uuid5(), "role": role}
+    access_key = {"key": str(uuid4()), "role": role}
 
     await cache.add("AccessKey", user_id, access_key, 1800)
 
     return access_key
 
 
-def create_access_token(data: dict):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=30)
+async def create_access_token(data: dict):
+    access_key = await generate_access_key(data.get("sub"), data.get("role"))
 
-    access_key = await generate_access_key(data.get("id"), data.get("role"))
-
-    to_encode.update({"exp": expire, "key": access_key})
-    encoded_jwt = jwt.encode(to_encode, st.secret, st.hash)
+    encoded_jwt = jwt.encode(data, st.secret, st.hash)
 
     return encoded_jwt
 
 
 def check_access_token(payload: dict):
-    expire = payload.get("exp")
-    if not expire or int(expire) < datetime.utcnow().timestamp():
-        raise AuthExc.TokenTimeNotValid
-
     user_id = payload.get("sub")
     if not user_id:
         raise AuthExc.TokenIdNotValid
-
-    access_key = payload.get("key")
-    if not access_key:
-        raise AuthExc.TokenKeyNotValid
 
     role = payload.get("role")
     if not role:
         raise AuthExc.TokenRoleNotValid
 
 
-async def authenticate_user(session, user, password):
-    if not user:
-        raise AuthExc.UserDoesNotExist
+async def authenticate_user(user_id: str, expected_role: str):
+    access_key = await cache.get("AccessKey", user_id)
 
-    password_is_valid = verify_password(password, user.password)
-    if not password_is_valid:
-        raise AuthExc.NotValidPass
+    if not access_key:
+        raise AuthExc.UserNotAuthorized
 
-    return user
+    actual_role = access_key.get("role")
+    if actual_role != expected_role:
+        raise AuthExc.HaveNoRights
