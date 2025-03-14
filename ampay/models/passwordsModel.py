@@ -12,3 +12,4 @@ class Passwords(Base):
     password: Mapped[str] = mapped_column(nullable=False)
 
     client_password = relationship("Clients", back_populates="password")
+    admin_password = relationship("Admins", back_populates="password")

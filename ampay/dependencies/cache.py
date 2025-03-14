@@ -24,3 +24,9 @@ async def get(typ: str, key: str):
     await redis.expire(key_val, 360)
 
     return json.loads(value.decode())
+
+
+async def rem(typ: str, key: str):
+    key_val = f"{typ}:{key}"
+
+    await redis.delete(key_val)

@@ -15,3 +15,14 @@ class Clients(Base):
     password_id: Mapped[UUID] = mapped_column(ForeignKey("passwords.id"), nullable=False)
 
     password = relationship("Passwords", back_populates="client_password")
+
+
+class Admins(Base):
+    __tablename__ = "admins"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(nullable=False)
+    email: Mapped[str] = mapped_column(nullable=False)
+    password_id: Mapped[UUID] = mapped_column(ForeignKey("passwords.id"), nullable=False)
+
+    password = relationship("Passwords", back_populates="admin_password")

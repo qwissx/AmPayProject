@@ -9,7 +9,7 @@ from ampay.routers import auth as au
 
 app = FastAPI(docs_url=None)
 
-app.include_router(au.reg_router)
+app.include_router(au.auth_router)
 
 
 @app.get("/", include_in_schema=False)

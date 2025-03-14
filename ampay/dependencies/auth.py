@@ -15,7 +15,7 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def verify_password(plain_pass, hashed_pass) -> bool:
+def verify_password(plain_pass: str, hashed_pass: str) -> bool:
     return pwd_context.verify(plain_pass, hashed_pass)
 
 
@@ -27,6 +27,10 @@ async def generate_access_key(user_id: str, role: str):
     return access_key
 
 
+async def delete_access_token(user_id: str) -> None:
+    await cache.rem("AccessKey", user_id)
+
+
 async def create_access_token(data: dict):
     access_key = await generate_access_key(data.get("sub"), data.get("role"))
 
@@ -35,7 +39,7 @@ async def create_access_token(data: dict):
     return encoded_jwt
 
 
-def check_access_token(payload: dict):
+def check_access_token(payload: dict) -> None:
     user_id = payload.get("sub")
     if not user_id:
         raise AuthExc.TokenIdNotValid
@@ -45,7 +49,7 @@ def check_access_token(payload: dict):
         raise AuthExc.TokenRoleNotValid
 
 
-async def authenticate_user(user_id: str, expected_role: str):
+async def authenticate_user(user_id: str, expected_role: str) -> None:
     access_key = await cache.get("AccessKey", user_id)
 
     if not access_key:
