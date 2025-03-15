@@ -4,12 +4,14 @@ from fastapi.openapi.docs import (
     get_swagger_ui_oauth2_redirect_html,
 )
 
-from ampay.routers import auth as au
+from ampay.routers.auth import auth_router
+from ampay.routers.payments import pay_router
 
 
 app = FastAPI(docs_url=None)
 
-app.include_router(au.auth_router)
+app.include_router(auth_router)
+app.include_router(pay_router)
 
 
 @app.get("/", include_in_schema=False)

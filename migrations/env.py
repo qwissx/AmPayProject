@@ -8,6 +8,7 @@ from ampay.connections import Base
 from ampay.settings import settings as st
 from ampay.models.usersModel import Clients, Admins
 from ampay.models.passwordsModel import Passwords
+from ampay.models.paymentsModel import Payments
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

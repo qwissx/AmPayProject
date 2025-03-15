@@ -14,22 +14,22 @@ class UsersService:
         role = user_data.pop("role")
 
         user_id = uuid4()
-        password_id = uuid4()
+        passwordId = uuid4()
 
-        await PasswordsRepository.add(session, id=password_id, password=password1)
+        await PasswordsRepository.add(session, id=passwordId, password=password)
 
         if role == "client":
             await ClientsRepository.add(
                 session, 
                 id=user_id, 
-                password_id=password_id, 
+                passwordId=passwordId, 
                 **user_data
             )
         if role == "admin":
             await AdminsRepository.add(
                 session, 
                 id=user_id, 
-                password_id=password_id, 
+                passwordId=passwordId, 
                 **user_data
             )
 

@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, Response, status
-from fastapi.security import OAuth2AuthorizationCodeBearer, OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ampay.schemas import usersSchemas as uS
@@ -45,7 +44,7 @@ async def login_user(
     if not user:
         raise AuthExc.UserDoesNotExist
     
-    user_pass = await UsersService.get_pass(session, id=user.password_id)
+    user_pass = await UsersService.get_pass(session, id=user.passwordId)
 
     if not au.verify_password(user_data.password, user_pass):
         raise AuthExc.NotValidPass
