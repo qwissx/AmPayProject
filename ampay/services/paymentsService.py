@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ampay.exceptions import SQLAlchExc
 from ampay.repositories.paymentsRepository import PaymentsRepository
 
 
@@ -37,6 +38,11 @@ class PaymentsService:
         payments = await PaymentsRepository.getPag(session, offset, limit, **filter_by)
         totalCount = await PaymentsRepository.count(session, **filter_by)
 
-        # возможно кешировать значения
-
         return payments, totalCount
+
+    @classmethod
+    async def delete(cls, session: AsyncSession, **filter_by):
+        if not await PaymentsRepository.get(session, **filter_by):
+            raise SQLAlchExc.PaymentDoesNotExist
+
+        await PaymentsRepository.rem(session, **filter_by)

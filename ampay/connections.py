@@ -3,6 +3,7 @@ from typing import AsyncGenerator
 from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from aiohttp import ClientSession
 from redis.asyncio import Redis
 
 from ampay.settings import settings as st
@@ -18,9 +19,14 @@ class Base(DeclarativeBase):
     pass
 
 
-async def session_getter() -> AsyncGenerator[AsyncSession, None]:
+async def database_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
     
+
+async def client_session() -> AsyncGenerator[ClientSession, None]:
+    async with ClientSession(st.partner_url) as session:
+        yield session
+
 
 redis = Redis(host=st.redis_host, port=st.redis_port, db=0)

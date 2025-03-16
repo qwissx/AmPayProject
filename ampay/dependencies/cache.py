@@ -1,6 +1,24 @@
 import json
 
 from ampay.connections import redis
+from ampay.models.usersModel import Clients, Admins
+
+
+def user_to_dict(user: Clients | Admins) -> dict:
+    if isinstance(user, Clients):
+        role = "client"
+    if isinstance(user, Admins):
+        role = "admin"
+
+    user = user.__dict__
+    user.pop("_sa_instance_state")
+
+    user["id"] = str(user.get("id"))
+    user["passwordId"] = str(user.get("passwordId"))
+    
+    user.update({"role": role})
+
+    return user
 
 
 async def add(typ: str, key: str, data: str | dict, exp=360):
@@ -20,8 +38,6 @@ async def get(typ: str, key: str):
 
     if not value:
         return None
-
-    await redis.expire(key_val, 360)
 
     return json.loads(value.decode())
 

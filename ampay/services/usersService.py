@@ -2,6 +2,9 @@ from uuid import UUID, uuid4
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ampay.dependencies import cache
+from ampay.schemas.usersSchemas import SUser
+from ampay.dependencies.cache import user_to_dict
 from ampay.repositories.usersRepositories import ClientsRepository, AdminsRepository
 from ampay.repositories.passwordsRepository import PasswordsRepository
 from ampay.dependencies.auth import get_password_hash, verify_password
@@ -35,16 +38,27 @@ class UsersService:
 
         return user_id
 
-
     @classmethod
     async def find(cls, session: AsyncSession, **user_data):
         role = user_data.pop("role")
+        user_id = user_data.get("id")
+        
+        if user_id:
+            user = await cache.get("Users", user_id)
+
+            if user:
+                return SUser(**user)
 
         if role == "client":
-            return await ClientsRepository.get(session, **user_data)
+            user = await ClientsRepository.get(session, **user_data)
         if role == "admin":
-            return await AdminsRepository.get(session, **user_data)
+            user = await AdminsRepository.get(session, **user_data)
 
+        if user:
+            dict_user = user_to_dict(user)
+            await cache.add("Users", dict_user.get("id"), dict_user)
+
+        return user
 
     @classmethod
     async def get_pass(cls, session: AsyncSession, **user_data) -> str:

@@ -31,5 +31,4 @@ class SUser(BaseModel):
     id: UUID
     username: str
     email: EmailStr
-    password: str
     role: Role

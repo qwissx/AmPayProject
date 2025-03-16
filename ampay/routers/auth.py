@@ -5,7 +5,7 @@ from ampay.schemas import usersSchemas as uS
 from ampay.exceptions import AuthExc
 from ampay.services.usersService import UsersService
 from ampay.dependencies import auth as au
-from ampay.connections import session_getter
+from ampay.connections import database_session
 from ampay.dependencies.users import get_current_user
 
 
@@ -16,7 +16,7 @@ auth_router = APIRouter(prefix="/auth", tags=["Authorization"])
 async def register_user(
     response: Response,
     user_data: uS.SUserReg,
-    session: AsyncSession = Depends(session_getter),
+    session: AsyncSession = Depends(database_session),
 ) -> dict[str, str]:
     if await UsersService.find(session, role=user_data.role, email=user_data.email):
         raise AuthExc.UserExist
@@ -30,14 +30,14 @@ async def register_user(
 
     await session.commit()
 
-    return {"message": "user was added successfully"}
+    return {"message": "User was added successfully"}
 
 
 @auth_router.post(path="/login")
 async def login_user(
     response: Response,
     user_data: uS.SUserLogIn,
-    session: AsyncSession = Depends(session_getter),
+    session: AsyncSession = Depends(database_session),
 ) -> dict[str, str]:
     user = await UsersService.find(session, role=user_data.role, email=user_data.email)
     
@@ -54,16 +54,16 @@ async def login_user(
     )
     response.set_cookie("access_token", access_token, httponly=True)
     
-    return {"message": "access is open"}
+    return {"message": "Access is open"}
 
 
 @auth_router.delete(path="/logout")
 async def logout_user(
     response: Response,
     user: uS.SUser = Depends(get_current_user),
-    session: AsyncSession = Depends(session_getter),
+    session: AsyncSession = Depends(database_session),
 ) -> dict[str, str]:
     await au.delete_access_token(user.id)
     response.delete_cookie("access_token")
 
-    return {"message": "access is denied"}
+    return {"message": "Access is denied"}

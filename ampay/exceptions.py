@@ -1,6 +1,10 @@
 from fastapi import HTTPException, status
 
 
+class SQLAlchExc:
+    PaymentDoesNotExist = HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Payment already was deleted")
+
+
 class AuthExc:
     UserExist = HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User is already exist")
     UserDoesNotExist = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not exist")

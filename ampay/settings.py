@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     secret: str = Field(..., env="SECRET")
     hash: str = Field(..., env="HASH")
 
+    partner_url: str = Field(..., env="PARTNER_URL")
+
     sign_key: str = Field(..., env="IAJaZGQgV6RS")
     partner_api_key: str = Field(..., env="PARTNER_API_KEY")
 
