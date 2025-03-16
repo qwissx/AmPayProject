@@ -3,6 +3,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    prod: bool = Field(..., env="PROD")
+
     db_name: str = Field(..., env="DB_NAME")
     db_user: str = Field(..., env="DB_USER")
     db_port: str = Field(..., env="DB_PORT")
@@ -15,13 +17,20 @@ class Settings(BaseSettings):
     secret: str = Field(..., env="SECRET")
     hash: str = Field(..., env="HASH")
 
-    partner_url: str = Field(..., env="PARTNER_URL")
+    partner_url_test: str = Field(..., env="PARTNER_URL_TEST")
+    partner_url_prod: str = Field(..., env="PARTNER_URL_PROD")
 
     sign_key: str = Field(..., env="IAJaZGQgV6RS")
     partner_api_key: str = Field(..., env="PARTNER_API_KEY")
 
     class Config:
         env_file = ".env"
+
+    @property
+    def partner_url(self):
+        if self.prod:
+            return self.partner_url_prod
+        return self.partner_url_test
 
     @property
     def db_url(self):

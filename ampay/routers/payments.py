@@ -7,6 +7,7 @@ from ampay.schemas import usersSchemas as uS
 from ampay.schemas import paymentsSchemas as pS
 from ampay.services.paymentsService import PaymentsService
 from ampay.repositories.paymentsRepository import PaymentsRepository
+from ampay.dependencies.partner import CheckStatus
 
 
 pay_router = APIRouter(prefix="/payments", tags=["Payments"])
@@ -23,6 +24,13 @@ async def create_payment(
     await session.commit()
 
     return payment
+
+
+@pay_router.get("/hui")
+async def hui(
+    user: uS.SUser = Depends(get_current_user)
+):
+    await CheckStatus("123")
 
 
 @pay_router.get(path="/")
