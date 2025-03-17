@@ -26,8 +26,8 @@ async def create_payment(
     return payment
 
 
-@pay_router.get("/hui")
-async def hui(
+@pay_router.get("/test")
+async def test(
     user: uS.SUser = Depends(get_current_user)
 ):
     await CheckStatus("123")
