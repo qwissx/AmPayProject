@@ -15,6 +15,7 @@ class Clients(Base):
     password_id: Mapped[UUID] = mapped_column(ForeignKey("passwords.id"), nullable=False)
 
     payin = relationship("PayIn", back_populates="user")
+    payout = relationship("PayOut", back_populates="user")
     password = relationship("Passwords", back_populates="client_password")
 
 

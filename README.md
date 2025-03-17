@@ -29,3 +29,7 @@ Using stack: Redis, FastAPI, RabbitMQ, Celery, Aiohttp.
 Architecture of the project:
 
 ![Architecture](static/app.png)
+
+Tables in PostgreSQL:
+
+![Tables](static/tables.png)

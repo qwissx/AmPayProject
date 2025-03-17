@@ -29,7 +29,7 @@ class PayOut(Base):
     __tablename__ = "rz_payout"
 
     id: Mapped[UUID] = mapped_column(primary_key=True)
-    clientId: Mapped[UUID] = mapped_column(ForeignKey("clients.id"), nullable=False)
+    client_id: Mapped[UUID] = mapped_column(ForeignKey("clients.id"), nullable=False)
     reference_id: Mapped[str] = mapped_column(nullable=True)
     type: Mapped[pS.Type] = mapped_column(nullable=False)
     method: Mapped[pS.Method] = mapped_column(nullable=False)
@@ -40,4 +40,4 @@ class PayOut(Base):
     created_at: Mapped[datetime] = mapped_column(nullable=False)
     state: Mapped[pS.State] = mapped_column(nullable=False)
 
-    user = relationship("Clients", back_populates="payin")
+    user = relationship("Clients", back_populates="payout")
