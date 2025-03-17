@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ampay.schemas import usersSchemas as uS
+from ampay.schemas import users_schemas as uS
 from ampay.exceptions import AuthExc
-from ampay.services.usersService import UsersService
+from ampay.services.users_service import UsersService
 from ampay.dependencies import auth as au
 from ampay.connections import database_session
 from ampay.dependencies.users import get_current_user

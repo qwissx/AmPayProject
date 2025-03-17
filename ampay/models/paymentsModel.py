@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from ampay.connections import Base
-from ampay.schemas import paymentsSchemas as pS
+from ampay.schemas import payments_schemas as pS
 
 
 class Payments(Base):

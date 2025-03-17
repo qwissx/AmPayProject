@@ -3,10 +3,10 @@ from uuid import UUID, uuid4
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ampay.dependencies import cache
-from ampay.schemas.usersSchemas import SUser
+from ampay.schemas.users_schemas import SUser
 from ampay.dependencies.cache import user_to_dict
-from ampay.repositories.usersRepositories import ClientsRepository, AdminsRepository
-from ampay.repositories.passwordsRepository import PasswordsRepository
+from ampay.repositories.users_repositories import ClientsRepository, AdminsRepository
+from ampay.repositories.passwords_repository import PasswordsRepository
 from ampay.dependencies.auth import get_password_hash, verify_password
 
 

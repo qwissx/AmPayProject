@@ -3,10 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ampay.connections import database_session
 from ampay.dependencies.users import get_current_user, admin_require
-from ampay.schemas import usersSchemas as uS
-from ampay.schemas import paymentsSchemas as pS
-from ampay.services.paymentsService import PaymentsService
-from ampay.repositories.paymentsRepository import PaymentsRepository
+from ampay.schemas import users_schemas as uS
+from ampay.schemas import payments_schemas as pS
+from ampay.services.payments_service import PaymentsService
+from ampay.repositories.payments_repository import PaymentsRepository
 from ampay.dependencies.partner import CheckStatus
 
 

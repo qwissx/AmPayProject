@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from ampay.models.paymentsModel import Payments
-from ampay.repositories.baseRepository import BaseRepository
+from ampay.repositories.base_repository import BaseRepository
 
 
 class PaymentsRepository(BaseRepository):

@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ampay.exceptions import AuthExc
 from ampay.connections import database_session
 from ampay.dependencies.auth import check_access_token, authenticate_user
-from ampay.services.usersService import UsersService
+from ampay.services.users_service import UsersService
 from ampay.settings import settings as st
 
 

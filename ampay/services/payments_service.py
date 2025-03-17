@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ampay.exceptions import SQLAlchExc
-from ampay.repositories.paymentsRepository import PaymentsRepository
+from ampay.repositories.payments_repository import PaymentsRepository
 
 
 class PaymentsService:
