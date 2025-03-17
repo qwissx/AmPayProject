@@ -66,7 +66,11 @@ async def create_payin(
     )
     json_response = await request.json()
 
-    print(json_response)
+    return json_response
+
+
+async def create_payout():
+    pass
 
 
 async def check_status(payment_id: str):

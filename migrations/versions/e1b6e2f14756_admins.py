@@ -25,8 +25,8 @@ def upgrade() -> None:
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('email', sa.String(), nullable=False),
-    sa.Column('passwordId', sa.Uuid(), nullable=False),
-    sa.ForeignKeyConstraint(['passwordId'], ['passwords.id'], ),
+    sa.Column('password_id', sa.Uuid(), nullable=False),
+    sa.ForeignKeyConstraint(['password_id'], ['passwords.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

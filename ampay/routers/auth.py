@@ -44,7 +44,7 @@ async def login_user(
     if not user:
         raise AuthExc.UserDoesNotExist
     
-    user_pass = await UsersService.get_pass(session, id=user.passwordId)
+    user_pass = await UsersService.get_pass(session, id=user.password_id)
 
     if not au.verify_password(user_data.password, user_pass):
         raise AuthExc.NotValidPass

@@ -14,7 +14,7 @@ def user_to_dict(user: Clients | Admins) -> dict:
     user.pop("_sa_instance_state")
 
     user["id"] = str(user.get("id"))
-    user["passwordId"] = str(user.get("passwordId"))
+    user["password_id"] = str(user.get("password_id"))
     
     user.update({"role": role})
 

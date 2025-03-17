@@ -12,9 +12,9 @@ class Clients(Base):
     id: Mapped[UUID] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(nullable=False)
     email: Mapped[str] = mapped_column(nullable=False)
-    passwordId: Mapped[UUID] = mapped_column(ForeignKey("passwords.id"), nullable=False)
+    password_id: Mapped[UUID] = mapped_column(ForeignKey("passwords.id"), nullable=False)
 
-    payin = relationship("Payments", back_populates="user")
+    payin = relationship("PayIn", back_populates="user")
     password = relationship("Passwords", back_populates="client_password")
 
 
@@ -24,6 +24,6 @@ class Admins(Base):
     id: Mapped[UUID] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(nullable=False)
     email: Mapped[str] = mapped_column(nullable=False)
-    passwordId: Mapped[UUID] = mapped_column(ForeignKey("passwords.id"), nullable=False)
+    password_id: Mapped[UUID] = mapped_column(ForeignKey("passwords.id"), nullable=False)
 
     password = relationship("Passwords", back_populates="admin_password")

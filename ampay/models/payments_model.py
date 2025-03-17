@@ -8,18 +8,36 @@ from ampay.connections import Base
 from ampay.schemas import payments_schemas as pS
 
 
-class Payments(Base):
-    __tablename__ = "payments"
+class PayIn(Base):
+    __tablename__ = "rz_payin"
 
     id: Mapped[UUID] = mapped_column(primary_key=True)
-    clientId: Mapped[UUID] = mapped_column(ForeignKey("clients.id"), nullable=False)
-    referenceId: Mapped[str] = mapped_column(nullable=True)
+    client_id: Mapped[UUID] = mapped_column(ForeignKey("clients.id"), nullable=False)
+    reference_id: Mapped[str] = mapped_column(nullable=True)
     type: Mapped[pS.Type] = mapped_column(nullable=False)
     method: Mapped[pS.Method] = mapped_column(nullable=False)
     amount: Mapped[float] = mapped_column(nullable=False)
     currency: Mapped[pS.Currency] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=True)
-    createdAt: Mapped[datetime] = mapped_column(nullable=False)
+    created_at: Mapped[datetime] = mapped_column(nullable=False)
     state: Mapped[pS.State] = mapped_column(nullable=False)
 
-    user = relationship("Clients", back_populates="payments")
+    user = relationship("Clients", back_populates="payin")
+
+
+class PayOut(Base):
+    __tablename__ = "rz_payout"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    clientId: Mapped[UUID] = mapped_column(ForeignKey("clients.id"), nullable=False)
+    reference_id: Mapped[str] = mapped_column(nullable=True)
+    type: Mapped[pS.Type] = mapped_column(nullable=False)
+    method: Mapped[pS.Method] = mapped_column(nullable=False)
+    amount: Mapped[float] = mapped_column(nullable=False)
+    currency: Mapped[pS.Currency] = mapped_column(nullable=False)
+    description: Mapped[str] = mapped_column(nullable=True)
+    parent_payment_id: Mapped[str] = mapped_column(nullable=True)
+    created_at: Mapped[datetime] = mapped_column(nullable=False)
+    state: Mapped[pS.State] = mapped_column(nullable=False)
+
+    user = relationship("Clients", back_populates="payin")

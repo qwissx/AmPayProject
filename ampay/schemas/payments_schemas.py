@@ -326,8 +326,8 @@ class Currency(str, Enum):
     IMP = "IMP"  # Мэнский фунт
 
 
-class SPaymentCreate(BaseModel):
-    referenceId: str | None = None
+class SPayInCreate(BaseModel):
+    reference_id: str | None = None
     type: Type = Type.DEPOSIT
     method: Method = Method.BASIC_CARD
     amount: float
@@ -335,19 +335,48 @@ class SPaymentCreate(BaseModel):
     description: str | None = None
 
 
-class SPaymentDisplay(BaseModel):
+class SPayOutCreate(BaseModel):
+    reference_id: str | None = None
+    type: Type = Type.DEPOSIT
+    method: Method = Method.BASIC_CARD
+    amount: float
+    currency: Currency
+    description: str | None = None
+    parent_payment_id: str | None = None
+
+
+class SPayInDisplay(BaseModel):
     id: UUID
-    referenceId: str | None = None
+    reference_id: str | None = None
     type: Type
     method: Method
     amount: float
     currency: Currency
     description: str | None = None
-    createdAt: datetime
+    created_at: datetime
     state: State
 
 
-class SPaginationPayments(BaseModel):
-    payments: list[SPaymentDisplay]
-    totalCount: int
-    currentCount: int
+class SPayOutDisplay(BaseModel):
+    id: UUID
+    reference_id: str | None = None
+    type: Type
+    method: Method
+    amount: float
+    currency: Currency
+    description: str | None = None
+    parent_payment_id: str | None = None
+    created_at: datetime
+    state: State
+
+
+class SPaginationPayIn(BaseModel):
+    payments: list[SPayInDisplay]
+    total_count: int
+    current_count: int
+
+
+class SPaginationPayOut(BaseModel):
+    payments: list[SPayOutDisplay]
+    total_count: int
+    current_count: int

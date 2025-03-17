@@ -1,8 +1,10 @@
+import abc
+
 from sqlalchemy import delete, insert, select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-class BaseRepository:
+class BaseRepository(abc.ABC):
     model = None
 
     @classmethod
