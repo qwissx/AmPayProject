@@ -1,19 +1,42 @@
 from uuid import uuid4, UUID
 from datetime import datetime
+from copy import deepcopy
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ampay.exceptions import SQLAlchExc
 from ampay.repositories.payments_repository import PaymentsRepository
+from ampay.dependencies import rz_partner as RZPartner
 
 
 class PaymentsService:
     @classmethod
-    async def register(cls, session: AsyncSession, user_id: UUID, **payment_data):
+    async def payin(cls, session: AsyncSession, user_id: UUID, **payment_data):
+        """payment_data
+            referenceId: str | None = None
+            type: Type = Type.DEPOSIT
+            method: Method = Method.BASIC_CARD
+            amount: float
+            currency: Currency
+            description: str | None = None
+        """
         payment_id = uuid4()
         current_time = datetime.utcnow()
 
-        # http request to partner
+        payment = deepcopy(payment_data)
+
+        payment_type = payment_data.pop("type")
+        paymet_method = payment_data.pop("method")
+        amount = payment_data.pop("amount")
+        currency = payment_data.pop("currency")
+
+        await RZPartner.create_payin(
+            payment_type=payment_type,
+            paymet_method=paymet_method,
+            amount=amount,
+            currency=currency,
+            **payment_data,
+        )
 
         await PaymentsRepository.add(
             session,
@@ -21,20 +44,20 @@ class PaymentsService:
             clientId=user_id,
             createdAt=current_time,
             state="COMPLETED",
-            **payment_data,
+            **payment,
         )
 
-        payment_data.update(
+        payment.update(
             id=payment_id,
             clientId=user_id,
             createdAt=current_time,
             state="COMPLETED",
         )
 
-        return payment_data
+        return payment
 
     @classmethod
-    async def findPag(cls, session: AsyncSession, offset, limit, **filter_by):
+    async def find_pag(cls, session: AsyncSession, offset, limit, **filter_by):
         payments = await PaymentsRepository.getPag(session, offset, limit, **filter_by)
         totalCount = await PaymentsRepository.count(session, **filter_by)
 

@@ -12,6 +12,7 @@ async def create_request(
     url: str,
     method: Literal["get", "post"],
     url_tail: str | None = None,
+    json: dict | None = None,
     params: dict | None = None, 
 ):
     if url_tail:
@@ -21,13 +22,15 @@ async def create_request(
 
     if params:
         request_data.update({"params": params})
+    if json:
+        request_data.update({"json": json})
 
     if method == "get":
         headers = {
             "accept": "application/json",
             "Authorization": f"Bearer {st.partner_api_key}"
         }
-        request_data.update(headers)
+        request_data.update({"headers": headers})
         return await session.get(url, **request_data)
     if method == "post":
         headers = {
@@ -35,7 +38,7 @@ async def create_request(
             "content-type": "application/json",
             "Authorization": f"Bearer {st.partner_api_key}"
         }
-        request_data.update(headers)
+        request_data.update({"headers": headers})
         return await session.post(url, **request_data)
 
 
@@ -44,11 +47,22 @@ async def create_payin(
     paymet_method: pS.Method, 
     amount: float | str, 
     currency: pS.Currency,
+    **params,
 ):
+    json = {
+        "paymentType": payment_type,
+        "paymentMethod": paymet_method,
+        "amount": amount,
+        "currency": currency,
+    }
+
+    if params:
+        json.update(params)
+
     request = await create_request(
         url="payments",
-        method="post"
-
+        method="post",
+        json=json,
     )
     json_response = await request.json()
 

@@ -24,6 +24,6 @@ async def database_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
     
 
-client_session = ClientSession(st.partner_url)
+# client_session = ClientSession(st.partner_url)
 
 redis = Redis(host=st.redis_host, port=st.redis_port, db=0)

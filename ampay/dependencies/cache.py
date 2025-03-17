@@ -1,7 +1,7 @@
 import json
 
 from ampay.connections import redis
-from ampay.models.usersModel import Clients, Admins
+from ampay.models.users_model import Clients, Admins
 
 
 def user_to_dict(user: Clients | Admins) -> dict:

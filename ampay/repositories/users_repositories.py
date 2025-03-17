@@ -1,5 +1,5 @@
 from ampay.repositories.base_repository import BaseRepository
-from ampay.models.usersModel import Clients, Admins
+from ampay.models.users_model import Clients, Admins
 
 
 class ClientsRepository(BaseRepository):

@@ -327,22 +327,22 @@ class Currency(str, Enum):
 
 
 class SPaymentCreate(BaseModel):
-    referenceId: str
+    referenceId: str | None = None
     type: Type = Type.DEPOSIT
     method: Method = Method.BASIC_CARD
     amount: float
     currency: Currency
-    description: str
+    description: str | None = None
 
 
 class SPaymentDisplay(BaseModel):
     id: UUID
-    referenceId: str
+    referenceId: str | None = None
     type: Type
     method: Method
     amount: float
     currency: Currency
-    description: str
+    description: str | None = None
     createdAt: datetime
     state: State
 

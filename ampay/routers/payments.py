@@ -7,30 +7,25 @@ from ampay.schemas import users_schemas as uS
 from ampay.schemas import payments_schemas as pS
 from ampay.services.payments_service import PaymentsService
 from ampay.repositories.payments_repository import PaymentsRepository
-from ampay.dependencies.partner import CheckStatus
 
 
 pay_router = APIRouter(prefix="/payments", tags=["Payments"])
 
 
-@pay_router.post(path="/", status_code=status.HTTP_201_CREATED)
-async def create_payment(
+@pay_router.post(path="/payin", status_code=status.HTTP_201_CREATED)
+async def create_payin(
     payment: pS.SPaymentCreate,
     user: uS.SUser = Depends(get_current_user),
     session: AsyncSession = Depends(database_session),
 ) -> pS.SPaymentDisplay:
-    payment = await PaymentsService.register(session, user.id, **payment.model_dump())
+    payment = await PaymentsService.payin(session, user.id, **payment.model_dump())
 
     await session.commit()
 
     return payment
 
 
-@pay_router.get("/test")
-async def test(
-    user: uS.SUser = Depends(get_current_user)
-):
-    await CheckStatus("123")
+@pay_router.post
 
 
 @pay_router.get(path="/")
@@ -40,7 +35,7 @@ async def pagination_payments(
     user: uS.SUser = Depends(get_current_user),
     session: AsyncSession = Depends(database_session),
 ) -> pS.SPaginationPayments:
-    payments, totalCount = await PaymentsService.findPag(session, offset, limit, clientId=user.id)
+    payments, totalCount = await PaymentsService.find_pag(session, offset, limit, clientId=user.id)
 
     return {
         "payments": payments,
@@ -49,23 +44,23 @@ async def pagination_payments(
     }
 
 
-@pay_router.get(path="/{payId}")
+@pay_router.get(path="/{pay_id}")
 async def get_payment(
-    payId: str, 
+    pay_id: str, 
     session: AsyncSession = Depends(database_session),
 ) -> pS.SPaymentDisplay:
-    payment = await PaymentsRepository.get(session, id=payId)
+    payment = await PaymentsRepository.get(session, id=pay_id)
 
     return payment
 
 
-@pay_router.delete(path="/{payId}")
+@pay_router.delete(path="/{pay_id}")
 async def del_payment(
-    payId: str, 
+    pay_id: str, 
     user: uS.SUser = Depends(admin_require),
     session: AsyncSession = Depends(database_session),
 ) -> dict[str, str]:
-    await PaymentsService.delete(session, id=payId)
+    await PaymentsService.delete(session, id=pay_id)
 
     await session.commit()
 

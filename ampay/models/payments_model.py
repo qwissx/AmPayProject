@@ -13,7 +13,7 @@ class Payments(Base):
 
     id: Mapped[UUID] = mapped_column(primary_key=True)
     clientId: Mapped[UUID] = mapped_column(ForeignKey("clients.id"), nullable=False)
-    referenceId: Mapped[str] = mapped_column(nullable=False)
+    referenceId: Mapped[str] = mapped_column(nullable=True)
     type: Mapped[pS.Type] = mapped_column(nullable=False)
     method: Mapped[pS.Method] = mapped_column(nullable=False)
     amount: Mapped[float] = mapped_column(nullable=False)
