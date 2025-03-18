@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     sign_key: str = Field(..., env="IAJaZGQgV6RS")
     partner_api_key: str = Field(..., env="PARTNER_API_KEY")
 
+    webhook_url: str = Field(..., env="WEBHOOK_URL")
+
     class Config:
         env_file = ".env"
 

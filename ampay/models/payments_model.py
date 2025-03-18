@@ -22,11 +22,11 @@ class PayIn(Base):
     created_at: Mapped[datetime] = mapped_column(nullable=False)
     state: Mapped[pS.State] = mapped_column(nullable=False)
 
-    user = relationship("Clients", back_populates="payin")
+    client = relationship("Clients", back_populates="payin")
 
 
-class PayOut(Base):
-    __tablename__ = "rz_payout"
+class Refund(Base):
+    __tablename__ = "rz_refund"
 
     id: Mapped[UUID] = mapped_column(primary_key=True)
     client_id: Mapped[UUID] = mapped_column(ForeignKey("clients.id"), nullable=False)
@@ -40,4 +40,4 @@ class PayOut(Base):
     created_at: Mapped[datetime] = mapped_column(nullable=False)
     state: Mapped[pS.State] = mapped_column(nullable=False)
 
-    user = relationship("Clients", back_populates="payout")
+    client = relationship("Clients", back_populates="refund")

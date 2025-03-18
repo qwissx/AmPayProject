@@ -1,4 +1,5 @@
 from typing import Literal
+from uuid import UUID
 
 from fastapi import Depends
 from aiohttp import ClientSession, http
@@ -54,6 +55,7 @@ async def create_payin(
         "paymentMethod": paymet_method,
         "amount": amount,
         "currency": currency,
+        "webhookUrl": st.webhook_url + "/rz/payin",
     }
 
     if params:
@@ -66,11 +68,38 @@ async def create_payin(
     )
     json_response = await request.json()
 
-    return json_response
+    if json_response.get("status") == 200:
+        return json_response.get("result")
+    
+    return None
 
 
-async def create_payout():
-    pass
+async def create_refund(
+    amount: float | str,
+    currency: pS.Currency,
+    parent_payment_id: UUID,
+    **params
+):
+    json = {
+        "amount": amount,
+        "currency": currency,
+        "parent_payment_id": parent_payment_id,
+    }
+
+    if params:
+        json.update(params)
+
+    request = await create_request(
+        url="refund/",
+        method="post",
+        json=json,
+    )
+    json_response = await request.json()
+
+    if json_response.get("status") == 200:
+        return json_response.get("result")
+    
+    return None
 
 
 async def check_status(payment_id: str):

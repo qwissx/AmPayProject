@@ -335,14 +335,14 @@ class SPayInCreate(BaseModel):
     description: str | None = None
 
 
-class SPayOutCreate(BaseModel):
+class SRefundCreate(BaseModel):
     reference_id: str | None = None
-    type: Type = Type.DEPOSIT
-    method: Method = Method.BASIC_CARD
+    type: Type | None = None
+    method: Method | None = None
     amount: float
     currency: Currency
     description: str | None = None
-    parent_payment_id: str | None = None
+    parent_payment_id: str
 
 
 class SPayInDisplay(BaseModel):
@@ -357,7 +357,7 @@ class SPayInDisplay(BaseModel):
     state: State
 
 
-class SPayOutDisplay(BaseModel):
+class SRefundDisplay(BaseModel):
     id: UUID
     reference_id: str | None = None
     type: Type
@@ -376,7 +376,7 @@ class SPaginationPayIn(BaseModel):
     current_count: int
 
 
-class SPaginationPayOut(BaseModel):
-    payments: list[SPayOutDisplay]
+class SPaginationRefund(BaseModel):
+    payments: list[SRefundDisplay]
     total_count: int
     current_count: int

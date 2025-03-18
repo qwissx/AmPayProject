@@ -2,16 +2,16 @@ from uuid import uuid4, UUID
 from datetime import datetime
 from copy import deepcopy
 from typing import Literal
-import abc
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ampay.exceptions import SQLAlchExc
-from ampay.repositories.payments_repository import PayInRepository, PayOutRepository
+from ampay.exceptions import SQLAlchExc, RZExc
+from ampay.repositories.payments_repository import PayInRepository, RefundRepository
 from ampay.dependencies import rz_partner as RZPartner
+from ampay.schemas.payments_schemas import State
 
 
-class BasePaymentsService(abc.ABC):
+class BasePaymentsService:
     PayRepository = None
 
     @classmethod
@@ -28,6 +28,10 @@ class BasePaymentsService(abc.ABC):
 
         await cls.PayRepository.rem(session, **filter_by)
 
+    @classmethod
+    async def update_state(cls, session: AsyncSession, payment_id: UUID, new_state: State):
+        await cls.PayRepository.update(session, payment_id, state=new_state)
+
 
 class PayInService(BasePaymentsService):
     PayRepository = PayInRepository
@@ -42,9 +46,6 @@ class PayInService(BasePaymentsService):
             currency: Currency
             description: str | None = None
         """
-        payment_id = uuid4()
-        current_time = datetime.utcnow()
-
         payment = deepcopy(payment_data)
 
         payment_type = payment_data.pop("type")
@@ -52,7 +53,7 @@ class PayInService(BasePaymentsService):
         amount = payment_data.pop("amount")
         currency = payment_data.pop("currency")
 
-        await RZPartner.create_payin(
+        response = await RZPartner.create_payin(
             payment_type=payment_type,
             paymet_method=paymet_method,
             amount=amount,
@@ -60,70 +61,80 @@ class PayInService(BasePaymentsService):
             **payment_data,
         )
 
+        if not response:
+            raise RZExc.BadPartnerResponse
+
+        payment_id = response.get("id")
+        created = datetime.fromisoformat(response.get("created"))
+        state = response.get("state")
+
         await PayInRepository.add(
             session,
             id=payment_id,
-            clientId=user_id,
-            created_at=current_time,
-            state="COMPLETED",
+            client_id=user_id,
+            created_at=created,
+            state=state,
             **payment,
         )
 
         payment.update(
             id=payment_id,
-            clientId=user_id,
-            created_at=current_time,
-            state="COMPLETED",
+            client_id=user_id,
+            created_at=created,
+            state=state,
         )
 
         return payment
 
 
-class PayOutService(BasePaymentsService):
-    PayRepository = PayOutRepository
+class RefundService(BasePaymentsService):
+    PayRepository = RefundRepository
 
     @classmethod
     async def create(cls, session: AsyncSession, user_id: UUID, **payment_data):
         """payment_data
             reference_id: str | None = None
-            type: Type = Type.DEPOSIT
-            method: Method = Method.BASIC_CARD
+            type: Type | None = None
+            method: Method | None = None
             amount: float
             currency: Currency
             description: str | None = None
+            parent_payment_id: str
         """
-        payment_id = uuid4()
-        current_time = datetime.utcnow()
-
         payment = deepcopy(payment_data)
 
-        payment_type = payment_data.pop("type")
-        paymet_method = payment_data.pop("method")
+        parent_payment_id = payment_data.pop("parent_payment_id")
         amount = payment_data.pop("amount")
         currency = payment_data.pop("currency")
 
-        await RZPartner.create_payin(
-            payment_type=payment_type,
-            paymet_method=paymet_method,
+        response = await RZPartner.create_refund(
             amount=amount,
             currency=currency,
+            parent_payment_id=parent_payment_id,
             **payment_data,
         )
+
+        if not response:
+            raise RZExc.BadPartnerResponse
+
+        payment_id = response.get("id")
+        created = datetime.fromisoformat(response.get("created"))
+        state = response.get("state")
 
         await PayInRepository.add(
             session,
             id=payment_id,
-            clientId=user_id,
-            created_at=current_time,
-            state="COMPLETED",
+            client_id=user_id,
+            created_at=created,
+            state=state,
             **payment,
         )
 
         payment.update(
             id=payment_id,
-            clientId=user_id,
-            created_at=current_time,
-            state="COMPLETED",
+            client_id=user_id,
+            created_at=created,
+            state=state,
         )
 
         return payment

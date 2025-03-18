@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from ampay.models.payments_model import PayIn, PayOut
+from ampay.models.payments_model import PayIn, Refund
 from ampay.repositories.base_repository import BaseRepository
 
 
@@ -20,5 +20,5 @@ class PayInRepository(BaseRepository):
         return payments.scalars().all()
 
 
-class PayOutRepository(BaseRepository):
-    model = PayOut
+class RefundRepository(BaseRepository):
+    model = Refund

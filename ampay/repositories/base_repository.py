@@ -1,10 +1,10 @@
-import abc
+from uuid import UUID
 
-from sqlalchemy import delete, insert, select, func
+from sqlalchemy import delete, insert, select, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-class BaseRepository(abc.ABC):
+class BaseRepository:
     model = None
 
     @classmethod
@@ -28,3 +28,12 @@ class BaseRepository(abc.ABC):
         query = select(func.count()).select_from(cls.model).filter_by(**filter_by)
         result = await session.execute(query)
         return result.scalar_one()
+
+    @classmethod
+    async def update(cls, session: AsyncSession, id: UUID, **values) -> None:
+        query = (
+            update(cls.model)
+            .where(cls.model.id==id)
+            .values(**values)
+        )
+        await session.execute(query)

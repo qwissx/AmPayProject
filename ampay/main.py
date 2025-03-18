@@ -6,13 +6,14 @@ from fastapi.openapi.docs import (
 
 from ampay.routers.auth import auth_router
 from ampay.routers.payments import pay_router
+from ampay.routers.webhooks import hook_router
 
 
 app = FastAPI(docs_url=None)
 
 app.include_router(auth_router)
 app.include_router(pay_router)
-
+app.include_router(hook_router)
 
 @app.get("/", include_in_schema=False)
 async def custom_swagger_ui_html():
