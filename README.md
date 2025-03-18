@@ -33,3 +33,15 @@ Architecture of the project:
 Tables in PostgreSQL:
 
 ![Tables](static/tables.png)
+
+## Explotation
+
+To start this first of all you have to fill completely env file in api service. After that you have to start your docker daemon and run this command: 
+
+```bash
+
+sudo docker compose up
+
+```
+
+After this your API will be running on http://localhost:8000
