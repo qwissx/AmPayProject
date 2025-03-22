@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     redis_host: str = Field(..., env="REDIS_HOST")
     redis_port: str = Field(..., env="REDIS_PORT")
 
+    rabbitmq_host: str = Field(..., env="RABBITMQ_HOST")
+    rabbitmq_port: str = Field(..., env="RABBITMQ_PORT")
+
     secret: str = Field(..., env="SECRET")
     hash: str = Field(..., env="HASH")
 
@@ -33,6 +36,10 @@ class Settings(BaseSettings):
         if self.prod:
             return self.partner_url_prod
         return self.partner_url_test
+
+    @property
+    def rabbitmq_url(self):
+        return f"pyamqp://{self.rabbitmq_host}:{self.rabbitmq_port}"
 
     @property
     def db_url(self):

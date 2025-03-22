@@ -1,6 +1,6 @@
 # AmPayProject
 
-This project was created for the company AmPay and intership. Project represents a RESTful API integrated with partners API. This API can track and display payment information.
+Project represents a RESTful API integrated with partners API. This API can track and display payment information.
 
 ---
 

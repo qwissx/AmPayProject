@@ -1,5 +1,4 @@
 from enum import Enum
-from uuid import UUID
 from datetime import datetime
 
 from pydantic import BaseModel
@@ -346,7 +345,7 @@ class SRefundCreate(BaseModel):
 
 
 class SPayInDisplay(BaseModel):
-    id: UUID
+    id: str
     reference_id: str | None = None
     type: Type
     method: Method
@@ -358,7 +357,7 @@ class SPayInDisplay(BaseModel):
 
 
 class SRefundDisplay(BaseModel):
-    id: UUID
+    id: str
     reference_id: str | None = None
     type: Type
     method: Method
@@ -380,3 +379,7 @@ class SPaginationRefund(BaseModel):
     payments: list[SRefundDisplay]
     total_count: int
     current_count: int
+
+
+class SPayment(BaseModel):
+    pass
